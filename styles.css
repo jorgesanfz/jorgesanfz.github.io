@@ -29,14 +29,14 @@ body {
 }
 
 .title {
-  font-size: 24px;
+  font-size: 30px;
   font-weight: bold;
   margin-bottom: 10px;
 }
 
 .description {
   font-family: "Roboto", sans-serif;
-  font-size: 16px;
+  font-size: 20px;
 }
 
 /*.text-block {
@@ -57,12 +57,17 @@ body {
   padding: 1px;
 }
 
-.languages > .fab {
-  font-size: 20px;
+.languages .fab {
+  font-size: 24px;
   color: #4363aa;
 }
+
+.languages > a > .fab:hover {
+  color: #75a1ff;
+}
+
 .social .fab {
-  font-size: 20px;
+  font-size: 24px;
   color: #e0e0e0;
 }
 
