@@ -1,5 +1,8 @@
-body {
+html {
   background-color: rgb(30, 30, 30);
+}
+
+body {
   color: beige;
   display: flex;
   justify-content: center;
