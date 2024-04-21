@@ -19,62 +19,93 @@
         <div class="title">jorge.sanfz</div>
         <div class="description">Desarrollador</div>
       </div>
-      <hr/>
-      <div class="languages">
-      <div class="row">
-        <div class="column">
-          <div class="row">
-          <a href=""
-            ><i class="fab fa-python"></i></a>
-            <a href="https://github.com/jorgesanfz/cars" target="_blank">
-              <i class="fa-brands fa-golang" style="font-size: 28px;"></i>
-            </a>
-          </div>
-        <hr />
-        <div class="row">
-          <a href="https://github.com/jorgesanfz/gondola"
-            ><i class="fa-solid fa-plane" style="font-size: 20px;"></i></a>
-          <a href="https://github.com/jorgesanfz/cars" target="_blank"
-            ><i class="fa-solid fa-car" style="font-size: 20px;"></i></a>
-        </div>
-        </div>
-        <div style="width: 24px;"></div>
-        <div class="column">
-          <div class="row">
-            <a href="https://github.com/jorgesanfz/gondola" target="_blank"
-              ><i class="fab fa-js"></i
-            ></a>
-            <a href="https://github.com/jorgesanf/PF-App" target="_blank">
-              <i class="fab fa-react"></i
-            ></a>
-            </div>
-        <hr />
-        <div class="row">
-        <a href="https://github.com/jorgesanfz/manager" target="_blank">
-          <i class="fa-solid fa-mobile" style="font-size: 22px;"></i></a>
-        <a href="https://github.com/jorgesanfz/manager" target="_blank">
-          <i class="fab fa-ubuntu" style="font-size: 22px;"></i
-        ></a>
-        </div>
-        <!--<i class="fab fa-python"></i>
-        <i class="fab fa-git"></i>-->
-      </div>
-      </div>
       <hr />
-      <div class="social">
-        <a href="https://github.com/jorgesanfz" target="_blank"
-          ><i class="fab fa-github"></i
-        ></a>
-        <a
-          href="https://www.linkedin.com/in/jorge-sanchis-363365174/"
-          target="_blank"
-          ><i class="fab fa-linkedin"></i
-        ></a>
-        <a href="https://www.instagram.com/jorge.sanfz" target="_blank"
-          ><i class="fab fa-instagram"></i
-        ></a>
+      <div class="languages">
+        <div class="row">
+          <div class="column">
+            <div class="row">
+              <a href=""><i class="fab fa-python"></i></a>
+              <a href="https://github.com/jorgesanfz/cars" target="_blank">
+                <i class="fa-brands fa-golang" style="font-size: 28px"></i>
+              </a>
+            </div>
+            <hr />
+            <div class="row">
+              <a href="https://github.com/jorgesanfz/gondola"
+                ><i class="fa-solid fa-plane" style="font-size: 20px"></i
+              ></a>
+              <a href="https://github.com/jorgesanfz/cars" target="_blank"
+                ><i class="fa-solid fa-car" style="font-size: 20px"></i
+              ></a>
+            </div>
+          </div>
+          <div style="width: 24px"></div>
+          <div class="column">
+            <div class="row">
+              <a href="https://github.com/jorgesanfz/gondola" target="_blank"
+                ><i class="fab fa-js"></i
+              ></a>
+              <a href="https://github.com/jorgesanf/PF-App" target="_blank">
+                <i class="fab fa-react"></i
+              ></a>
+            </div>
+            <hr />
+            <div class="row">
+              <a href="https://github.com/jorgesanfz/manager" target="_blank">
+                <i class="fa-solid fa-mobile" style="font-size: 22px"></i
+              ></a>
+              <a href="https://github.com/jorgesanfz/manager" target="_blank">
+                <i class="fab fa-ubuntu" style="font-size: 22px"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <hr style="margin: 14px" />
+        <div class="social">
+          <a href="https://github.com/jorgesanfz" target="_blank"
+            ><i class="fab fa-github"></i
+          ></a>
+          <a
+            href="https://www.linkedin.com/in/jorge-sanchis-363365174/"
+            target="_blank"
+            ><i class="fab fa-linkedin"></i
+          ></a>
+          <a href="https://www.instagram.com/jorge.sanfz" target="_blank"
+            ><i class="fab fa-instagram"></i
+          ></a>
+        </div>
       </div>
-      <script src="main.js"></script>
     </div>
+    <div class="content">
+      <!-- Tab links -->
+      <div class="tab">
+        <button class="tablinks active" onclick="openTab(event, 'Bio')">
+          Bio
+        </button>
+        <button class="tablinks" onclick="openTab(event, 'Edu')">Edu</button>
+        <button class="tablinks" onclick="openTab(event, 'Misc')">Misc</button>
+      </div>
+
+      <!-- Tab content -->
+      <!--<div id="intro">
+        <p>bla</p>
+      </div>-->
+
+      <div id="Bio" class="tabcontent active">
+        <h3>Bio</h3>
+        <p>...</p>
+      </div>
+
+      <div id="Edu" class="tabcontent">
+        <h3>Edu</h3>
+        <p>...</p>
+      </div>
+
+      <div id="Misc" class="tabcontent">
+        <h3>Misc</h3>
+        <p>...</p>
+      </div>
+    </div>
+    <script src="main.js"></script>
   </body>
 </html>

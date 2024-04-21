@@ -24,7 +24,7 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 20px;
+  padding: 30px;
   border: beige 1px solid;
   border-radius: 10px;
   background-color: rgb(39 39 39);
@@ -32,7 +32,7 @@ body {
 }
 
 .title {
-  font-size: 30px;
+  font-size: 28px;
   font-weight: bold;
   margin-bottom: 10px;
 }
@@ -60,13 +60,13 @@ body {
   padding: 1px;
 }
 
-.languages .fab {
+.languages a > i {
   font-size: 24px;
-  color: #4363aa;
+  color: #587fd4;
 }
 
-.languages > a > .fab:hover {
-  color: #75a1ff;
+.languages i:hover {
+  color: #aac5ff;
 }
 
 .social .fab {
@@ -95,5 +95,60 @@ body {
   text-decoration: none;
   margin: auto;
   margin-inline: 2px;
-  /*color: #e0e0e0;*/
+  color: #e0e0e0;
+}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  color: #ccc;
+  margin-left: 5%;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  color: beige;
+  border-bottom: 1px solid #ccc;
+  font-size: 14px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  color: #aac5ff;
+  border-color: #aac5ff;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  color: #75a1ff;
+  border-color: #75a1ff;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  width: 50%;
+  margin: 5% 2.5%;
+  padding: 2%;
+}
+
+.tabcontent {
+  display: none;
+  padding: 2.5% 2%;
+}
+
+.tabcontent.active {
+  display: block;
+}
+
+#intro {
+  padding: 6px 12px;
 }
