@@ -85,6 +85,21 @@ body {
   justify-content: center;
 }
 
+.column > h5 {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.column > h4 {
+  margin: 0;
+  padding: 0;
+}
+
+.content .column {
+  justify-content: flex-start;
+}
+
 .row {
   display: flex;
   flex-direction: row;
@@ -137,7 +152,7 @@ body {
   align-self: flex-start;
   width: 50%;
   margin: 5% 2.5%;
-  padding: 2%;
+  padding: 5% 2.5%;
 }
 
 .tabcontent {

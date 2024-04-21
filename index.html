@@ -79,31 +79,121 @@
     <div class="content">
       <!-- Tab links -->
       <div class="tab">
-        <button class="tablinks active" onclick="openTab(event, 'Bio')">
-          Bio
+        <button class="tablinks active" onclick="openTab(event, 'BIO')">
+          Biografía
         </button>
-        <button class="tablinks" onclick="openTab(event, 'Edu')">Edu</button>
-        <button class="tablinks" onclick="openTab(event, 'Misc')">Misc</button>
+        <button class="tablinks" onclick="openTab(event, 'EDU')">
+          Educación
+        </button>
+        <button class="tablinks" onclick="openTab(event, 'EXP')">
+          Experiencia
+        </button>
+        <button class="tablinks" onclick="openTab(event, 'Console')">
+          Console
+        </button>
       </div>
 
-      <!-- Tab content -->
-      <!--<div id="intro">
-        <p>bla</p>
-      </div>-->
-
-      <div id="Bio" class="tabcontent active">
-        <h3>Bio</h3>
-        <p>...</p>
+      <div id="BIO" class="tabcontent active">
+        <div>
+          <p>🌟 ¡Hola! Soy Jorge, un desarrollador de Valencia.</p>
+          <p>
+            🎓 Tengo un CFGS en Desarrollo de Aplicaciones Multiplataforma
+            cursado en el IES Abastos. Actualmente estoy estudiando el Grado en
+            Ingeniería Informática en la Universitat Oberta de Catalunya (UOC).
+          </p>
+          <div>
+            <p>
+              💼 Actualmente, soy desarrollador full stack en ETRA I+D, donde
+              fundamentalmente participo en proyectos europeos de:
+            </p>
+            <ul>
+              <li>Tráfico</li>
+              <li>Seguridad</li>
+            </ul>
+          </div>
+          <div>
+            <p>📚 En mi tiempo libre, alterno entre:</p>
+            <div class="row">
+              <div>🏛️ Filosofía</div>
+              <div>🎨 Arte</div>
+              <div>🖥️ Tecnología</div>
+              <div>🥊 Boxeo</div>
+              <div>☘️ Jardinería</div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div id="Edu" class="tabcontent">
-        <h3>Edu</h3>
-        <p>...</p>
+      <div id="EDU" class="tabcontent">
+        <div class="column">
+          <h4>Formación</h4>
+          <ul>
+            <li>🎓 CFGS en Desarrollo de Aplicaciones Multiplataforma</li>
+            <li>🎓 Grado en Ingeniería Informática (2022-...)</li>
+          </ul>
+        </div>
+        <div class="column">
+          <h4>Idiomas</h4>
+          <ul>
+            <li>🇪🇸 Español</li>
+            <li>🇬🇧 Inglés</li>
+            <li>🇫🇷 Francés</li>
+          </ul>
+        </div>
       </div>
 
-      <div id="Misc" class="tabcontent">
-        <h3>Misc</h3>
-        <p>...</p>
+      <div id="EXP" class="tabcontent">
+        <div>
+          <h4>🚀 Experiencia profesional</h4>
+          <div class="row">
+            <div class="column">
+              <h5>Desarrollo web</h5>
+              <ul>
+                <li>JavaScript</li>
+                <li>Node.js</li>
+                <li>React</li>
+                <li>Three.js</li>
+              </ul>
+            </div>
+            <div class="column">
+              <h5>Desarrollo de aplicaciones</h5>
+              <ul>
+                <li>Flutter</li>
+                <li>Go</li>
+                <li>Python</li>
+              </ul>
+            </div>
+            <div class="column">
+              <h5>Base de datos</h5>
+              <ul>
+                <li>SQL</li>
+                <li>MongoDB</li>
+                <li>Firestore</li>
+                <li>DynamoDB</li>
+              </ul>
+            </div>
+            <div class="column">
+              <h5>Cloud</h5>
+              <ul>
+                <li>AWS</li>
+                <li>Azure</li>
+              </ul>
+            </div>
+            <div class="column">
+              <h5>DevOps</h5>
+              <ul>
+                <li>Docker</li>
+                <li>Kubernetes</li>
+                <li>CI/CD</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="Console" class="tabcontent">
+        <h3>🏗️ Work in progress...</h3>
+        <p>jorge@sanfz</p>
       </div>
     </div>
     <script src="main.js"></script>
