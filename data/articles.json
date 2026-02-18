@@ -1,0 +1,12 @@
+{
+  "articles": [
+    {
+      "slug": "2026-02-bienvenidos",
+      "title": "Bienvenidos",
+      "date": "2026-02-18",
+      "summary": "Una introduccion a este sitio y por que decidi crearlo.",
+      "tags": ["personal"],
+      "draft": false
+    }
+  ]
+}
