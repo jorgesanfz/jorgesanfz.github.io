@@ -7,7 +7,9 @@
       "Bash(deno --version:*)",
       "WebFetch(domain:esm.sh)",
       "WebFetch(domain:deno.land)",
-      "WebFetch(domain:jsr.io)"
+      "WebFetch(domain:jsr.io)",
+      "Bash(brew install:*)",
+      "Bash(deno run:*)"
     ]
   }
 }
