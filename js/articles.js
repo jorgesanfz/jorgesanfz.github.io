@@ -2,12 +2,9 @@
   var container = document.getElementById('articles-container');
   if (!container) return;
 
-  // Determine the base path to data/articles.json relative to the current page
-  var basePath = document.querySelector('meta[name="base-path"]');
-  var prefix = basePath ? basePath.getAttribute('content') : '';
-  var jsonUrl = prefix + 'data/articles.json';
+  var prefix = document.documentElement.getAttribute('data-prefix') || '';
 
-  fetch(jsonUrl)
+  fetch(prefix + 'data/articles.json')
     .then(function (res) {
       if (!res.ok) throw new Error('Error al cargar articulos');
       return res.json();

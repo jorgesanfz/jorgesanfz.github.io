@@ -1,0 +1,19 @@
+{
+  "entries": [
+    {
+      "date": "2026-02-19",
+      "tag": "shipped",
+      "text": "Rediseno del sitio: nueva home con frases rotativas, seccion lab, y overlay en el espacio 3D. El sitio empieza a tener personalidad."
+    },
+    {
+      "date": "2026-02-18",
+      "tag": "shipped",
+      "text": "Primera version del sitio personal. HTML, CSS, JS puro. Build con Deno. Hosting en GitHub Pages."
+    },
+    {
+      "date": "2026-02-18",
+      "tag": "experiment",
+      "text": "Escena 3D con Three.js: grid infinito, particulas flotantes, objetos geometricos. Controles en primera persona."
+    }
+  ]
+}

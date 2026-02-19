@@ -1,0 +1,7 @@
+[
+  { "label": "GitHub", "href": "https://github.com/jorgesanfz", "external": true },
+  { "label": "LinkedIn", "href": "https://linkedin.com/in/jorgesanfz", "external": true },
+  { "label": "Email", "href": "mailto:jorge@sanfz.eu" },
+  { "label": "RSS", "href": "feed.xml" },
+  { "label": "Como esta hecho", "href": "como.html" }
+]

@@ -1,0 +1,11 @@
+{
+  "overlay": {
+    "heading": "Espacio",
+    "description": "Un lugar para experimentar. Nada practico, solo curiosidad convertida en codigo. Muevete con WASD y el raton.",
+    "button": "Entrar"
+  },
+  "hud": {
+    "back": "volver",
+    "controls": "wasd / flechas para moverse · mouse para mirar"
+  }
+}

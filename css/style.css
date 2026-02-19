@@ -196,85 +196,110 @@ h3 { font-size: 1.25rem; }
 }
 
 /* ============================================
-   Home: Hero
+   Home: Statement
    ============================================ */
-.hero {
-  padding: 4rem 0 2rem;
+.home-statement {
+  padding: 5rem 0 3rem;
+  text-align: center;
 }
 
-.hero h1 {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.hero .subtitle {
+.statement-text {
+  font-family: var(--font-mono);
   font-size: 1.25rem;
-  color: var(--color-text-secondary);
-  max-width: 500px;
+  color: var(--color-accent);
+  line-height: 1.6;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  min-height: 2em;
 }
 
 /* ============================================
-   Home: Bio
+   Home: Intro
    ============================================ */
-.bio {
-  padding: 2rem 0;
-  display: flex;
-  gap: 2rem;
-  align-items: flex-start;
+.home-intro {
+  padding: 0 0 3rem;
+  max-width: 540px;
 }
 
-.bio-photo {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-  background-color: var(--color-surface);
-  border: 2px solid var(--color-border);
-}
-
-.bio-text p {
-  margin-bottom: 1rem;
+.home-intro p {
   color: var(--color-text-secondary);
+  margin-bottom: 0.75rem;
+  font-size: 1.0625rem;
+  line-height: 1.7;
 }
 
-.bio-text p:last-child {
+.home-intro p:last-child {
   margin-bottom: 0;
 }
 
 /* ============================================
-   Home: Links
+   Home: Nav Cards
    ============================================ */
-.links {
-  padding: 2rem 0 4rem;
+.home-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding-bottom: 4rem;
 }
 
-.links h2 {
-  margin-bottom: 1rem;
-}
-
-.links-list {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.links-list a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
+.home-nav-card {
+  display: block;
+  padding: 1.5rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  color: var(--color-text);
-  font-size: 0.9375rem;
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
-.links-list a:hover {
+.home-nav-card:hover {
   border-color: var(--color-accent);
   background-color: var(--color-surface);
+  text-decoration: none;
+}
+
+.home-nav-card h2 {
+  font-size: 1.125rem;
+  color: var(--color-text);
+  margin-bottom: 0.375rem;
+}
+
+.home-nav-card p {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.home-nav-card--space {
+  grid-column: 1 / -1;
+  border-color: rgba(0, 255, 136, 0.2);
+}
+
+[data-theme="dark"] .home-nav-card--space {
+  border-color: rgba(0, 255, 136, 0.15);
+}
+
+.home-nav-card--space:hover {
+  border-color: rgba(0, 255, 136, 0.5);
+  background-color: rgba(0, 255, 136, 0.03);
+}
+
+/* ============================================
+   Footer Links
+   ============================================ */
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.footer-links a {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: var(--color-accent);
   text-decoration: none;
 }
 
@@ -450,6 +475,204 @@ h3 { font-size: 1.25rem; }
 }
 
 /* ============================================
+   Lab Page
+   ============================================ */
+.lab-page {
+  padding: 3rem 0 4rem;
+}
+
+.lab-page > h1 {
+  font-family: var(--font-mono);
+  margin-bottom: 0.5rem;
+}
+
+.lab-page > p {
+  color: var(--color-text-secondary);
+  margin-bottom: 2rem;
+}
+
+.lab-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.lab-entry {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.lab-entry:first-child {
+  border-top: 1px solid var(--color-border);
+}
+
+.lab-entry-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.375rem;
+}
+
+.lab-entry time {
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+  flex-shrink: 0;
+}
+
+.lab-entry .lab-tag {
+  font-size: 0.6875rem;
+  padding: 0.0625rem 0.5rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.lab-tag--experiment {
+  background-color: var(--color-tag-bg);
+  color: var(--color-tag-text);
+}
+
+.lab-tag--shipped {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+[data-theme="dark"] .lab-tag--shipped {
+  background-color: #064e3b;
+  color: #6ee7b7;
+}
+
+.lab-tag--broken {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+[data-theme="dark"] .lab-tag--broken {
+  background-color: #450a0a;
+  color: #fca5a5;
+}
+
+.lab-tag--learned {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+[data-theme="dark"] .lab-tag--learned {
+  background-color: #451a03;
+  color: #fcd34d;
+}
+
+.lab-entry-body {
+  color: var(--color-text);
+}
+
+.lab-entry-body p {
+  margin: 0;
+}
+
+.lab-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+}
+
+/* ============================================
+   Space: Intro Overlay
+   ============================================ */
+.space-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.85);
+  text-align: center;
+  padding: 2rem;
+}
+
+.space-overlay h1 {
+  font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+  color: rgba(0, 255, 136, 0.8);
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.space-overlay p {
+  color: rgba(0, 255, 136, 0.5);
+  font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+  font-size: 0.875rem;
+  max-width: 400px;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.space-overlay button {
+  background: none;
+  border: 1px solid rgba(0, 255, 136, 0.4);
+  color: rgba(0, 255, 136, 0.8);
+  font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+  font-size: 0.9rem;
+  padding: 0.6rem 2rem;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: border-color 0.3s, color 0.3s, background-color 0.3s;
+}
+
+.space-overlay button:hover {
+  border-color: rgba(0, 255, 136, 0.8);
+  color: rgba(0, 255, 136, 1);
+  background-color: rgba(0, 255, 136, 0.05);
+}
+
+/* ============================================
+   Como (Colophon) Page
+   ============================================ */
+.como-page {
+  padding: 3rem 0 4rem;
+}
+
+.como-page > h1 {
+  margin-bottom: 0.5rem;
+}
+
+.como-page > .como-subtitle {
+  color: var(--color-text-secondary);
+  margin-bottom: 2.5rem;
+}
+
+.como-section {
+  margin-bottom: 2rem;
+}
+
+.como-section h2 {
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+
+.como-section p {
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+.como-section code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background-color: var(--color-code-bg);
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+}
+
+/* ============================================
    404 Page
    ============================================ */
 .not-found {
@@ -490,25 +713,36 @@ h3 { font-size: 1.25rem; }
    Responsive
    ============================================ */
 @media (max-width: 600px) {
-  .hero h1 {
-    font-size: 2rem;
+  .home-statement {
+    padding: 3rem 0 2rem;
   }
 
-  .hero .subtitle {
+  .statement-text {
     font-size: 1.0625rem;
   }
 
-  .bio {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+  .home-nav {
+    grid-template-columns: 1fr;
   }
 
-  .links-list {
-    flex-direction: column;
+  .home-nav-card--space {
+    grid-column: auto;
   }
 
-  .links-list a {
-    justify-content: center;
+  .lab-entry-header {
+    flex-wrap: wrap;
+  }
+
+  .site-nav {
+    gap: 1rem;
+  }
+
+  .site-nav a {
+    font-size: 0.8125rem;
+  }
+
+  .footer-links {
+    flex-wrap: wrap;
+    gap: 1rem;
   }
 }

@@ -1,9 +1,10 @@
-(function () {
-  const toggle = document.querySelector('.theme-toggle');
+// Se llama desde render.js despues de montar el nav
+window.initTheme = function () {
+  var toggle = document.querySelector('.theme-toggle');
   if (!toggle) return;
 
   function getTheme() {
-    const saved = localStorage.getItem('theme');
+    var saved = localStorage.getItem('theme');
     if (saved) return saved;
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
@@ -18,7 +19,7 @@
   setTheme(getTheme());
 
   toggle.addEventListener('click', function () {
-    const current = document.documentElement.getAttribute('data-theme');
+    var current = document.documentElement.getAttribute('data-theme');
     setTheme(current === 'dark' ? 'light' : 'dark');
   });
 
@@ -27,4 +28,4 @@
       setTheme(e.matches ? 'dark' : 'light');
     }
   });
-})();
+};

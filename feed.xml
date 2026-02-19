@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Jorge</title>
+    <link>https://jorgesanfz.github.io</link>
+    <description>Espacio personal de Jorge. Desarrollo web, ideas y experimentos.</description>
+    <language>es</language>
+    <atom:link href="https://jorgesanfz.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Bienvenidos</title>
+      <link>https://jorgesanfz.github.io/articles/2026-02-bienvenidos.html</link>
+      <guid>https://jorgesanfz.github.io/articles/2026-02-bienvenidos.html</guid>
+      <pubDate>Wed, 18 Feb 2026 12:00:00 GMT</pubDate>
+      <description>Una introduccion a este sitio y por que decidi crearlo.</description>
+    </item>
+  </channel>
+</rss>

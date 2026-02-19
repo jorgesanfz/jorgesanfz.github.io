@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="es" data-page="home">
+<html lang="es" data-page="lab">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jorge - Pagina Personal</title>
-  <meta name="description" content="Espacio personal de Jorge. Desarrollo web, ideas y experimentos.">
-  <meta property="og:title" content="Jorge - Pagina Personal">
-  <meta property="og:description" content="Espacio personal de Jorge. Desarrollo web, ideas y experimentos.">
+  <title>Lab - Jorge</title>
+  <meta name="description" content="Registro de experimentos, aprendizajes y cosas en progreso.">
+  <meta property="og:title" content="Lab - Jorge">
+  <meta property="og:description" content="Registro de experimentos, aprendizajes y cosas en progreso.">
   <meta property="og:type" content="website">
-  <link rel="alternate" type="application/rss+xml" title="Jorge" href="feed.xml">
   <link rel="stylesheet" href="css/style.css">
   <script>
     (function() {
@@ -24,12 +23,21 @@
   <header class="site-header" id="site-header"></header>
 
   <main>
-    <div class="container" id="page-content"></div>
+    <div class="container">
+      <section class="lab-page">
+        <h1>> lab</h1>
+        <p>Lo que estoy construyendo, rompiendo y aprendiendo. Sin filtro.</p>
+        <div id="lab-container">
+          <noscript><p>Se requiere JavaScript para cargar las entradas del lab.</p></noscript>
+        </div>
+      </section>
+    </div>
   </main>
 
   <footer class="site-footer" id="site-footer"></footer>
 
   <script src="js/theme.js"></script>
   <script src="js/render.js"></script>
+  <script src="js/lab.js"></script>
 </body>
 </html>

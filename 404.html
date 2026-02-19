@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-page="404">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,17 +16,7 @@
   </script>
 </head>
 <body>
-  <header class="site-header">
-    <div class="container">
-      <a href="index.html" class="site-logo">Jorge</a>
-      <nav class="site-nav">
-        <a href="index.html">Inicio</a>
-        <a href="articles.html">Articulos</a>
-        <a href="space.html">Espacio</a>
-        <button class="theme-toggle" aria-label="Cambiar tema">🌙</button>
-      </nav>
-    </div>
-  </header>
+  <header class="site-header" id="site-header"></header>
 
   <main>
     <div class="container">
@@ -41,12 +31,9 @@
     </div>
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <p>&copy; 2026 Jorge</p>
-    </div>
-  </footer>
+  <footer class="site-footer" id="site-footer"></footer>
 
   <script src="js/theme.js"></script>
+  <script src="js/render.js"></script>
 </body>
 </html>

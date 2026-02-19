@@ -1,0 +1,30 @@
+{
+  "heading": "Como esta hecho este sitio",
+  "subtitle": "Cada decision tecnica es una opinion. Estas son las mias.",
+  "sections": [
+    {
+      "title": "Sin frameworks",
+      "body": "HTML, CSS y JavaScript puro. No React, no Vue, no Svelte. No porque sean malos, sino porque no los necesito. Un sitio personal no tiene la complejidad que justifica un framework. El resultado: cero dependencias en el cliente, carga instantanea, y codigo que puedo entender en su totalidad."
+    },
+    {
+      "title": "Sin build tools (casi)",
+      "body": "El unico paso de build es un script en <code>Deno</code> que convierte archivos Markdown en HTML. No hay bundler, no hay transpilador, no hay hot reload. Los archivos que escribo son los archivos que se sirven. Elegi Deno porque es TypeScript nativo, no necesita <code>package.json</code>, y un solo archivo hace todo el trabajo."
+    },
+    {
+      "title": "Archivos estaticos",
+      "body": "No hay servidor, no hay base de datos, no hay CMS. Solo archivos HTML, CSS y JS servidos directamente. GitHub Pages los aloja gratis. Si GitHub desaparece manana, tengo los archivos en mi maquina y los subo a cualquier otro lugar en minutos."
+    },
+    {
+      "title": "En espanol",
+      "body": "Porque es mi idioma. El contenido tecnico en espanol es necesario y quiero contribuir a que haya mas. Si alguien no entiende, los navegadores traducen."
+    },
+    {
+      "title": "Sin analytics",
+      "body": "No rastreo visitas, no uso cookies, no hay pixels de seguimiento. No me interesa cuantas personas leen esto. Me interesa que lo que escriba sea honesto y util."
+    },
+    {
+      "title": "El espacio 3D",
+      "body": "Existe porque quise experimentar con <code>Three.js</code> y porque un sitio personal puede ser mas que texto. Es la unica dependencia externa: una libreria cargada desde CDN, solo en esa pagina. El resto del sitio funciona sin JavaScript si hace falta."
+    }
+  ]
+}
