@@ -1,14 +1,54 @@
 {
   "articles": [
     {
-      "slug": "2026-02-bienvenidos",
+      "slug": "bienvenidos",
       "title": "Bienvenidos",
       "date": "2026-02-18",
       "summary": "Una introduccion a este sitio y por que decidi crearlo.",
       "tags": [
         "personal"
       ],
-      "draft": false
+      "draft": false,
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Este es mi nuevo espacio personal en internet. Despues de mucho pensarlo, decidi crear un sitio donde pudiera compartir mis ideas y proyectos de una forma simple y directa."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Por que un sitio propio"
+        },
+        {
+          "type": "paragraph",
+          "text": "Las redes sociales son utiles, pero hay algo especial en tener tu propio rincon en la web. Un lugar donde el contenido es tuyo, el formato lo decides tu, y no hay algoritmos de por medio."
+        },
+        {
+          "type": "paragraph",
+          "text": "Este sitio esta hecho con HTML, CSS y JavaScript puro. Sin frameworks, sin build tools, sin dependencias. Solo archivos estaticos servidos desde GitHub Pages."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Que esperar"
+        },
+        {
+          "type": "paragraph",
+          "text": "Voy a ir publicando articulos sobre cosas que me interesan: desarrollo web, herramientas que uso, proyectos en los que trabajo, y reflexiones varias sobre tecnologia."
+        },
+        {
+          "type": "paragraph",
+          "text": "No hay calendario fijo de publicacion. Escribo cuando tengo algo que decir."
+        },
+        {
+          "type": "blockquote",
+          "text": "La mejor herramienta es la que usas."
+        },
+        {
+          "type": "paragraph",
+          "text": "Gracias por pasar por aqui. Si quieres ponerte en contacto, puedes encontrar mis links en la pagina principal."
+        }
+      ]
     }
   ]
 }

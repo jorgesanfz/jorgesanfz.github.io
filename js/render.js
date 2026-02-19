@@ -33,7 +33,7 @@
         '<a href="' + prefix + 'index.html" class="site-logo">Jorge</a>' +
         '<nav class="site-nav">' +
           links +
-          '<button class="theme-toggle" aria-label="Cambiar tema">\uD83C\uDF19</button>' +
+          '<button class="theme-toggle" type="button" aria-label="Cambiar tema">\uD83C\uDF19</button>' +
         '</nav>' +
       '</div>';
   }
@@ -144,6 +144,7 @@
     var activeMap = {
       home: 'Inicio',
       articles: 'Articulos',
+      article: 'Articulos',
       lab: 'Lab',
       space: 'Espacio'
     };

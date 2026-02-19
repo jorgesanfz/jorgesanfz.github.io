@@ -25,7 +25,7 @@
         }).join('');
 
         return (
-          '<a class="article-card" href="' + prefix + 'articles/' + escapeHtml(article.slug) + '.html">' +
+          '<a class="article-card" href="' + prefix + 'article.html?slug=' + encodeURIComponent(article.slug) + '">' +
             '<time datetime="' + escapeHtml(article.date) + '">' + formatDate(article.date) + '</time>' +
             '<h2>' + escapeHtml(article.title) + '</h2>' +
             '<p>' + escapeHtml(article.summary) + '</p>' +

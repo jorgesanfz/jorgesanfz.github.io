@@ -1,4 +1,4 @@
-// build.ts — Genera HTML de articulos desde Markdown
+// build.ts — Genera JSON de articulos desde Markdown + feed RSS
 // Uso: deno run --allow-read --allow-write --allow-net build.ts
 
 import { extract } from "jsr:@std/front-matter@1/yaml";
@@ -21,13 +21,22 @@ interface ArticleEntry {
   summary: string;
   tags: string[];
   draft: boolean;
+  blocks: ArticleBlock[];
 }
+
+type ArticleBlock =
+  | { type: "heading"; level: number; text: string }
+  | { type: "paragraph"; text: string }
+  | { type: "blockquote"; text: string }
+  | { type: "list"; ordered: boolean; items: string[] }
+  | { type: "code"; language: string; code: string }
+  | { type: "image"; src: string; alt: string; title?: string }
+  | { type: "hr" };
 
 // --- Rutas ---
 
 const ROOT = new URL(".", import.meta.url).pathname;
-const DRAFTS_DIR = `${ROOT}drafts`;
-const ARTICLES_DIR = `${ROOT}articles`;
+const ARTICLES_MD_DIR = `${ROOT}articles`;
 const DATA_DIR = `${ROOT}data`;
 
 // --- Utilidades ---
@@ -40,23 +49,83 @@ function escapeHtml(str: string): string {
     .replace(/"/g, "&quot;");
 }
 
-function escapeAttr(str: string): string {
-  return str.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
-}
-
-function formatDateSpanish(dateStr: string): string {
-  const months = [
-    "enero", "febrero", "marzo", "abril", "mayo", "junio",
-    "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre",
-  ];
-  const [year, month, day] = dateStr.split("-");
-  return `${parseInt(day, 10)} de ${months[parseInt(month, 10) - 1]}, ${year}`;
-}
-
-function generateSlug(filename: string, date: string): string {
+function generateSlug(filename: string): string {
   const name = filename.replace(/\.md$/, "");
-  const [year, month] = date.split("-");
-  return `${year}-${month}-${name}`;
+  return name;
+}
+
+function normalizeInline(text: string): string {
+  return text.replace(/\s+/g, " ").trim();
+}
+
+function markdownToBlocks(markdown: string): ArticleBlock[] {
+  const tokens = marked.lexer(markdown);
+  const blocks: ArticleBlock[] = [];
+
+  for (const token of tokens) {
+    switch (token.type) {
+      case "heading": {
+        blocks.push({
+          type: "heading",
+          level: token.depth,
+          text: normalizeInline(token.text || ""),
+        });
+        break;
+      }
+
+      case "paragraph": {
+        blocks.push({
+          type: "paragraph",
+          text: normalizeInline(token.text || ""),
+        });
+        break;
+      }
+
+      case "blockquote": {
+        const text = token.tokens
+          .map((inner: any) => (inner.type === "paragraph" || inner.type === "text") ? (inner.text || "") : "")
+          .join(" ");
+        blocks.push({ type: "blockquote", text: normalizeInline(text) });
+        break;
+      }
+
+      case "list": {
+        const items = token.items.map((item: any) => normalizeInline(item.text || "")).filter(Boolean);
+        blocks.push({
+          type: "list",
+          ordered: !!token.ordered,
+          items,
+        });
+        break;
+      }
+
+      case "code": {
+        blocks.push({
+          type: "code",
+          language: (token.lang || "").trim(),
+          code: token.text || "",
+        });
+        break;
+      }
+
+      case "image": {
+        blocks.push({
+          type: "image",
+          src: token.href || "",
+          alt: token.text || "",
+          title: token.title || undefined,
+        });
+        break;
+      }
+
+      case "hr": {
+        blocks.push({ type: "hr" });
+        break;
+      }
+    }
+  }
+
+  return blocks;
 }
 
 // --- Validacion ---
@@ -70,7 +139,6 @@ function validateFrontmatter(
   if (typeof attrs.title !== "string" || !attrs.title.trim()) {
     errors.push("title es requerido");
   }
-  // YAML parsea fechas como Date objects, hay que normalizar
   let dateStr = "";
   if (attrs.date instanceof Date) {
     dateStr = attrs.date.toISOString().split("T")[0];
@@ -102,86 +170,36 @@ function validateFrontmatter(
   };
 }
 
-// --- Template HTML ---
+// --- RSS ---
 
-function buildArticleHtml(article: {
-  title: string;
-  date: string;
-  summary: string;
-  tags: string[];
-  contentHtml: string;
-}): string {
-  const formattedDate = formatDateSpanish(article.date);
-  const tagsHtml = article.tags
-    .map((tag) => `            <span class="tag">${escapeHtml(tag)}</span>`)
+function buildRssFeed(articles: ArticleEntry[]): string {
+  const siteUrl = "https://jorgesanfz.github.io";
+  const published = articles.filter((a) => !a.draft);
+  const items = published
+    .map((a) => {
+      const link = `${siteUrl}/article.html?slug=${encodeURIComponent(a.slug)}`;
+      const pubDate = new Date(a.date + "T12:00:00Z").toUTCString();
+      return `    <item>
+      <title>${escapeHtml(a.title)}</title>
+      <link>${link}</link>
+      <guid>${link}</guid>
+      <pubDate>${pubDate}</pubDate>
+      <description>${escapeHtml(a.summary)}</description>
+    </item>`;
+    })
     .join("\n");
 
-  return `<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${escapeHtml(article.title)} - Jorge</title>
-  <meta name="description" content="${escapeAttr(article.summary)}">
-  <meta name="base-path" content="../">
-  <meta property="og:title" content="${escapeAttr(article.title)}">
-  <meta property="og:description" content="${escapeAttr(article.summary)}">
-  <meta property="og:type" content="article">
-  <link rel="stylesheet" href="../css/style.css">
-  <script>
-    (function() {
-      var s = localStorage.getItem('theme');
-      if (s) { document.documentElement.setAttribute('data-theme', s); }
-      else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }
-    })();
-  </script>
-</head>
-<body>
-  <header class="site-header">
-    <div class="container">
-      <a href="../index.html" class="site-logo">Jorge</a>
-      <nav class="site-nav">
-        <a href="../index.html">Inicio</a>
-        <a href="../articles.html">Articulos</a>
-        <a href="../space.html">Espacio</a>
-        <button class="theme-toggle" aria-label="Cambiar tema">\uD83C\uDF19</button>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-    <div class="container">
-      <article class="article-content">
-        <header class="article-header">
-          <time datetime="${article.date}">${formattedDate}</time>
-          <h1>${escapeHtml(article.title)}</h1>
-          <div class="tags">
-${tagsHtml}
-          </div>
-        </header>
-
-        <div class="prose">
-          ${article.contentHtml}
-        </div>
-      </article>
-
-      <nav class="article-nav">
-        <a href="../articles.html">&larr; Volver a articulos</a>
-      </nav>
-    </div>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container">
-      <p>&copy; ${new Date().getFullYear()} Jorge</p>
-    </div>
-  </footer>
-
-  <script src="../js/theme.js"></script>
-</body>
-</html>
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Jorge</title>
+    <link>${siteUrl}</link>
+    <description>Espacio personal de Jorge. Desarrollo web, ideas y experimentos.</description>
+    <language>es</language>
+    <atom:link href="${siteUrl}/feed.xml" rel="self" type="application/rss+xml"/>
+${items}
+  </channel>
+</rss>
 `;
 }
 
@@ -190,58 +208,42 @@ ${tagsHtml}
 async function main() {
   console.log("Construyendo articulos...\n");
 
-  // Verificar que drafts/ existe
   try {
-    await Deno.stat(DRAFTS_DIR);
+    await Deno.stat(ARTICLES_MD_DIR);
   } catch {
-    console.log("No se encontro el directorio drafts/. Nada que construir.");
+    console.log("No se encontro el directorio articles/. Nada que construir.");
     Deno.exit(0);
   }
 
-  // Asegurar que existen los directorios de salida
-  await Deno.mkdir(ARTICLES_DIR, { recursive: true });
   await Deno.mkdir(DATA_DIR, { recursive: true });
 
-  // Leer archivos .md
   const mdFiles: string[] = [];
-  for await (const entry of Deno.readDir(DRAFTS_DIR)) {
+  for await (const entry of Deno.readDir(ARTICLES_MD_DIR)) {
     if (entry.isFile && entry.name.endsWith(".md")) {
       mdFiles.push(entry.name);
     }
   }
 
   if (mdFiles.length === 0) {
-    console.log("No se encontraron archivos .md en drafts/.");
+    console.log("No se encontraron archivos .md en articles/.");
     Deno.exit(0);
   }
 
   mdFiles.sort();
 
-  // Procesar cada archivo
   const articles: ArticleEntry[] = [];
   let errorCount = 0;
 
   for (const filename of mdFiles) {
     try {
-      const filepath = `${DRAFTS_DIR}/${filename}`;
+      const filepath = `${ARTICLES_MD_DIR}/${filename}`;
       const raw = await Deno.readTextFile(filepath);
 
       const { attrs, body } = extract<Record<string, unknown>>(raw);
       const fm = validateFrontmatter(attrs, filename);
-      const slug = generateSlug(filename, fm.date);
-      const contentHtml = await marked.parse(body.trim());
-
-      const pageHtml = buildArticleHtml({
-        title: fm.title,
-        date: fm.date,
-        summary: fm.summary,
-        tags: fm.tags,
-        contentHtml,
-      });
-
-      const outPath = `${ARTICLES_DIR}/${slug}.html`;
-      await Deno.writeTextFile(outPath, pageHtml);
-      console.log(`  ${filename} -> articles/${slug}.html`);
+      const slug = generateSlug(filename);
+      const blocks = markdownToBlocks(body.trim());
+      console.log(`  ${filename} -> slug:${slug} (${blocks.length} bloques)`);
 
       articles.push({
         slug,
@@ -250,6 +252,7 @@ async function main() {
         summary: fm.summary,
         tags: fm.tags,
         draft: fm.draft,
+        blocks,
       });
     } catch (err) {
       console.error(`  ERROR en ${filename}: ${(err as Error).message}`);
@@ -257,14 +260,16 @@ async function main() {
     }
   }
 
-  // Ordenar por fecha descendente
   articles.sort((a, b) => b.date.localeCompare(a.date));
 
-  // Escribir articles.json
   const jsonPath = `${DATA_DIR}/articles.json`;
   const jsonContent = JSON.stringify({ articles }, null, 2) + "\n";
   await Deno.writeTextFile(jsonPath, jsonContent);
   console.log(`\n  data/articles.json actualizado (${articles.length} articulos)`);
+
+  const rssContent = buildRssFeed(articles);
+  await Deno.writeTextFile(`${ROOT}feed.xml`, rssContent);
+  console.log(`  feed.xml generado`);
 
   if (errorCount > 0) {
     console.error(`\n${errorCount} archivo(s) con errores.`);
