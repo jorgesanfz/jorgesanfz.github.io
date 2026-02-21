@@ -1,22 +1,22 @@
 {
   "intro": [
-    "Soy Jorge. Desarrollo software.",
-    "."
+    "Soy Jorge",
+    "Desarrollo cosas"
   ],
   "cards": [
     {
       "title": "Articulos",
-      "description": "Ideas y reflexiones sobre desarrollo, herramientas y tecnologia.",
+      "description": "A veces escribo",
       "href": "articles.html"
     },
     {
       "title": "Lab",
-      "description": "Registro de lo que estoy construyendo, rompiendo y aprendiendo.",
+      "description": "Registro de lo que estoy construyendo y rompiendo",
       "href": "lab.html"
     },
     {
       "title": "Espacio",
-      "description": "Un entorno 3D interactivo. Entra y explora.",
+      "description": "Está guay. Dale",
       "href": "space.html",
       "variant": "space"
     }
