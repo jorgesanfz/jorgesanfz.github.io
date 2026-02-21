@@ -339,6 +339,21 @@ h3 { font-size: 1.25rem; }
   text-decoration: none;
 }
 
+.article-card-media {
+  margin: -1.25rem -1.25rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  text-align: center;
+}
+
+.article-card-media img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
 .article-card time {
   font-size: 0.8125rem;
   color: var(--color-text-secondary);

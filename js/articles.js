@@ -4,31 +4,72 @@
 
   var prefix = document.documentElement.getAttribute('data-prefix') || '';
 
-  fetch(prefix + 'data/articles.json')
-    .then(function (res) {
+  Promise.all([
+    fetch(prefix + 'data/articles.json').then(function (res) {
       if (!res.ok) throw new Error('Error al cargar articulos');
       return res.json();
+    }),
+    fetch(prefix + 'data/posts.json').then(function (res) {
+      if (!res.ok) throw new Error('Error al cargar posts');
+      return res.json();
+    }).catch(function () {
+      return { posts: [] };
     })
-    .then(function (data) {
-      var articles = data.articles
-        .filter(function (a) { return !a.draft; })
-        .sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
+  ])
+    .then(function (results) {
+      var articlesData = results[0] || { articles: [] };
+      var postsData = results[1] || { posts: [] };
 
-      if (articles.length === 0) {
-        container.innerHTML = '<div class="articles-empty"><p>Aun no hay articulos publicados.</p></div>';
+      var items = [];
+
+      (articlesData.articles || []).forEach(function (article) {
+        if (article.draft) return;
+        items.push({
+          type: 'article',
+          slug: article.slug,
+          title: article.title,
+          date: article.date,
+          summary: article.summary,
+          tags: article.tags || [],
+          image: null
+        });
+      });
+
+      (postsData.posts || []).forEach(function (post) {
+        if (post.draft) return;
+        items.push({
+          type: 'post',
+          slug: post.slug,
+          title: post.title,
+          date: post.date,
+          summary: post.summary,
+          tags: post.tags || [],
+          image: post.image || null
+        });
+      });
+
+      items.sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
+
+      if (items.length === 0) {
+        container.innerHTML = '<div class="articles-empty"><p>Aun no hay publicaciones.</p></div>';
         return;
       }
 
-      var html = articles.map(function (article) {
-        var tags = (article.tags || []).map(function (t) {
+      var html = items.map(function (item) {
+        var tags = (item.tags || []).map(function (t) {
           return '<span class="tag">' + escapeHtml(t) + '</span>';
         }).join('');
 
+        var media = item.image && item.image.src
+          ? '<div class="article-card-media"><img src="' + escapeAttribute(item.image.src) + '" alt="' + escapeAttribute(item.image.alt || item.title || '') + '" loading="lazy"></div>'
+          : '';
+
         return (
-          '<a class="article-card" href="' + prefix + 'article.html?slug=' + encodeURIComponent(article.slug) + '">' +
-            '<time datetime="' + escapeHtml(article.date) + '">' + formatDate(article.date) + '</time>' +
-            '<h2>' + escapeHtml(article.title) + '</h2>' +
-            '<p>' + escapeHtml(article.summary) + '</p>' +
+          '<a class="article-card" href="' + prefix + 'article.html?slug=' + encodeURIComponent(item.slug) + '">' +
+            media +
+            '<time datetime="' + escapeHtml(item.date) + '">' + formatDate(item.date) + '</time>' +
+            '<h2>' + escapeHtml(item.title) + '</h2>' +
+            '<p>' + escapeHtml(item.summary || '') + '</p>' +
             (tags ? '<div class="tags">' + tags + '</div>' : '') +
           '</a>'
         );
@@ -37,7 +78,7 @@
       container.innerHTML = '<div class="articles-grid">' + html + '</div>';
     })
     .catch(function (err) {
-      container.innerHTML = '<div class="articles-empty"><p>No se pudieron cargar los articulos.</p></div>';
+      container.innerHTML = '<div class="articles-empty"><p>No se pudieron cargar las publicaciones.</p></div>';
       console.error(err);
     });
 
@@ -57,5 +98,14 @@
     var div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
+  }
+
+  function escapeAttribute(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
   }
 })();

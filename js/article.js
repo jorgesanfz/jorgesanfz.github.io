@@ -10,26 +10,52 @@
     return;
   }
 
-  fetch(prefix + 'data/articles.json')
-    .then(function (res) {
+  Promise.all([
+    fetch(prefix + 'data/articles.json').then(function (res) {
       if (!res.ok) throw new Error('Error al cargar articulos');
       return res.json();
+    }),
+    fetch(prefix + 'data/posts.json').then(function (res) {
+      if (!res.ok) throw new Error('Error al cargar posts');
+      return res.json();
+    }).catch(function () {
+      return { posts: [] };
     })
-    .then(function (data) {
-      var article = (data.articles || []).find(function (item) {
+  ])
+    .then(function (results) {
+      var articlesData = results[0] || { articles: [] };
+      var postsData = results[1] || { posts: [] };
+
+      var entry = (articlesData.articles || []).find(function (item) {
         return item.slug === slug && !item.draft;
       });
 
-      if (!article) {
-        container.innerHTML = '<section class="articles-empty"><p>Articulo no encontrado.</p></section>';
+      if (!entry) {
+        var post = (postsData.posts || []).find(function (item) {
+          return item.slug === slug && !item.draft;
+        });
+
+        if (post) {
+          entry = {
+            slug: post.slug,
+            title: post.title,
+            date: post.date,
+            tags: post.tags || [],
+            blocks: buildPostBlocks(post)
+          };
+        }
+      }
+
+      if (!entry) {
+        container.innerHTML = '<section class="articles-empty"><p>Publicacion no encontrada.</p></section>';
         return;
       }
 
-      renderArticle(article);
-      document.title = article.title + ' - Jorge';
+      renderArticle(entry);
+      document.title = entry.title + ' - Jorge';
     })
     .catch(function (err) {
-      container.innerHTML = '<section class="articles-empty"><p>No se pudo cargar el articulo.</p></section>';
+      container.innerHTML = '<section class="articles-empty"><p>No se pudo cargar la publicacion.</p></section>';
       console.error(err);
     });
 
@@ -114,6 +140,32 @@
     }
 
     return null;
+  }
+
+  function buildPostBlocks(post) {
+    var blocks = [];
+
+    if (post.image && post.image.src) {
+      blocks.push({
+        type: 'image',
+        src: post.image.src,
+        alt: post.image.alt || post.title || '',
+        title: post.image.title || ''
+      });
+    }
+
+    if (post.summary) {
+      blocks.push({
+        type: 'paragraph',
+        text: post.summary
+      });
+    }
+
+    (post.blocks || []).forEach(function (block) {
+      blocks.push(block);
+    });
+
+    return blocks;
   }
 
   function formatDate(dateStr) {

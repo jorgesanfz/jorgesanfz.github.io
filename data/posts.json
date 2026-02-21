@@ -1,0 +1,24 @@
+{
+  "posts": [
+    {
+      "slug": "ram",
+      "title": "RAM",
+      "date": "2026-02-21",
+      "summary": "",
+      "image": {
+        "src": "img/ai.png",
+        "alt": ""
+      },
+      "tags": [
+        "visual"
+      ],
+      "draft": false,
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "-"
+        }
+      ]
+    }
+  ]
+}
