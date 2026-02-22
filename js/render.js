@@ -30,11 +30,11 @@
 
     header.innerHTML =
       '<div class="container">' +
-        '<a href="' + prefix + 'index.html" class="site-logo">Jorge</a>' +
-        '<nav class="site-nav">' +
-          links +
-          '<button class="theme-toggle" type="button" aria-label="Cambiar tema">\uD83C\uDF19</button>' +
-        '</nav>' +
+      '<a href="' + prefix + 'index.html" class="site-logo">Jorge</a>' +
+      '<nav class="site-nav">' +
+      links +
+      '<button class="theme-toggle" type="button" aria-label="Cambiar tema">\uD83C\uDF19</button>' +
+      '</nav>' +
       '</div>';
   }
 
@@ -54,8 +54,8 @@
 
     footer.innerHTML =
       '<div class="container">' +
-        '<div class="footer-links">' + linksHtml + '</div>' +
-        '<p>&copy; ' + new Date().getFullYear() + ' Jorge</p>' +
+      '<div class="footer-links">' + linksHtml + '</div>' +
+      '<p>&copy; ' + new Date().getFullYear() + ' Jorge</p>' +
       '</div>';
   }
 
@@ -74,12 +74,12 @@
       return '<a href="' + card.href + '" class="home-nav-card' + extra + '">' +
         '<h2>' + escapeHtml(card.title) + '</h2>' +
         '<p>' + escapeHtml(card.description) + '</p>' +
-      '</a>';
+        '</a>';
     }).join('\n');
 
     container.innerHTML =
       '<section class="home-statement">' +
-        '<p id="statement" class="statement-text">&nbsp;</p>' +
+      '<p id="statement" class="statement-text">&nbsp;</p>' +
       '</section>' +
       '<section class="home-intro">' + intro + '</section>' +
       '<section class="home-nav">' + cards + '</section>';
@@ -91,7 +91,7 @@
       var dayIndex = Math.floor(Date.now() / 86400000) % statements.length;
       el.textContent = statements[dayIndex];
       el.style.opacity = '1';
-    }).catch(function () {});
+    }).catch(function () { });
   }
 
   function renderComo(data) {
@@ -102,14 +102,14 @@
       return '<div class="como-section">' +
         '<h2>' + escapeHtml(s.title) + '</h2>' +
         '<p>' + s.body + '</p>' +
-      '</div>';
+        '</div>';
     }).join('\n');
 
     container.innerHTML =
       '<section class="como-page">' +
-        '<h1>' + escapeHtml(data.heading) + '</h1>' +
-        '<p class="como-subtitle">' + escapeHtml(data.subtitle) + '</p>' +
-        sections +
+      '<h1>' + escapeHtml(data.heading) + '</h1>' +
+      '<p class="como-subtitle">' + escapeHtml(data.subtitle) + '</p>' +
+      sections +
       '</section>';
   }
 
@@ -167,4 +167,128 @@
     loadJson('data/space.json').then(renderSpace).catch(console.error);
   }
   // articles + lab already load their own JSON
+
+  // -- 2026 GSAP Cinematic Animations & Lenis --
+  if (typeof Lenis !== 'undefined' && typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
+
+    var lenis = new Lenis({
+      duration: 1.2,
+      easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+      direction: 'vertical',
+      gestureDirection: 'vertical',
+      smooth: true,
+      mouseMultiplier: 1,
+      smoothTouch: false,
+      touchMultiplier: 2,
+    });
+
+    lenis.on('scroll', ScrollTrigger.update);
+
+    gsap.ticker.add(function (time) {
+      lenis.raf(time * 1000);
+    });
+    gsap.ticker.lagSmoothing(0);
+
+    // Dynamic Header
+    var header = document.getElementById('site-header');
+    lenis.on('scroll', function (e) {
+      if (!header) return;
+      if (e.scroll > 50) {
+        header.classList.add('is-scrolled');
+      } else {
+        header.classList.remove('is-scrolled');
+      }
+    });
+
+    function initGSAPAnimations() {
+      // 1. Cinematic Text Reveals
+      var textElements = document.querySelectorAll('.home-statement, .home-intro p, .como-section, .prose > p');
+      textElements.forEach(function (el) {
+        if (el.dataset.gsapDone) return;
+        el.dataset.gsapDone = 'true';
+
+        gsap.fromTo(el,
+          { y: 50, opacity: 0, rotationX: 15 },
+          {
+            y: 0, opacity: 1, rotationX: 0,
+            duration: 1.2, ease: "power3.out",
+            scrollTrigger: {
+              trigger: el,
+              start: "top 90%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        );
+      });
+
+      // 2. Parallax Cards Pipeline
+      var cards = document.querySelectorAll('.home-nav-card, .article-card');
+      cards.forEach(function (card, index) {
+        if (card.dataset.gsapDone) return;
+        card.dataset.gsapDone = 'true';
+
+        // Staggered Entrance
+        gsap.fromTo(card,
+          { y: 80, opacity: 0, scale: 0.95 },
+          {
+            y: 0, opacity: 1, scale: 1,
+            duration: 1, ease: "back.out(1.4)",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 85%",
+            }
+          }
+        );
+
+        // Subtle Scroll Parallax (Cards move slightly at a different speed)
+        gsap.to(card, {
+          yPercent: -10,
+          ease: "none",
+          scrollTrigger: {
+            trigger: card,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true
+          }
+        });
+      });
+
+      // 3. Mask Reveals for Media/Containers
+      var media = document.querySelectorAll('.article-card-media img, .prose img');
+      media.forEach(function (img) {
+        if (img.dataset.gsapDone) return;
+        img.dataset.gsapDone = 'true';
+
+        gsap.fromTo(img,
+          { clipPath: 'inset(100% 0% 0% 0%)', scale: 1.2 },
+          {
+            clipPath: 'inset(0% 0% 0% 0%)', scale: 1,
+            duration: 1.5, ease: "power4.inOut",
+            scrollTrigger: {
+              trigger: img,
+              start: "top 80%",
+            }
+          }
+        );
+      });
+    }
+
+    // Run initially and then on DOM mutations ONLY on the home page
+    if (page === 'home') {
+      initGSAPAnimations();
+      var mutObserver = new MutationObserver(initGSAPAnimations);
+      mutObserver.observe(document.body, { childList: true, subtree: true });
+    }
+
+    // Handle standard anchor links with Lenis
+    document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        var target = document.querySelector(this.getAttribute('href'));
+        if (target) lenis.scrollTo(target);
+      });
+    });
+  }
+
 })();

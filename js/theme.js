@@ -13,7 +13,7 @@ window.initTheme = function () {
   function saveTheme(theme) {
     try {
       localStorage.setItem('theme', theme);
-    } catch (e) {}
+    } catch (e) { }
   }
 
   function getTheme() {
@@ -64,3 +64,9 @@ if (document.readyState === 'loading') {
 } else {
   window.initTheme();
 }
+
+// 2026 Dynamic Cursor Glow Tracking
+document.addEventListener('mousemove', function (e) {
+  document.documentElement.style.setProperty('--mouse-x', e.clientX + 'px');
+  document.documentElement.style.setProperty('--mouse-y', e.clientY + 'px');
+});

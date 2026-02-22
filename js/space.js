@@ -1,187 +1,183 @@
 import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import * as BufferGeometryUtils from "three/addons/utils/BufferGeometryUtils.js";
 
 // --- Setup ---
 
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x000000, 0.015);
+scene.fog = new THREE.FogExp2(0x000510, 0.0002);
 
 const camera = new THREE.PerspectiveCamera(
-  75,
+  60,
   window.innerWidth / window.innerHeight,
-  0.1,
-  500
+  1,
+  10000
 );
-camera.position.set(0, 8, 0);
-camera.rotation.order = "YXZ";
+// Posición inicial: vista isométrica sobre la ciudad
+camera.position.set(0, 800, 1000);
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x000510, 1);
 document.body.appendChild(renderer.domElement);
 
-// --- Colores ---
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+controls.maxPolarAngle = Math.PI / 2 - 0.05; // No permitir pasar debajo del suelo
+controls.minDistance = 50;
+controls.maxDistance = 2000;
 
-const GRID_COLOR = 0x00ff88;
-const GRID_COLOR_DIM = 0x004422;
-const AXIS_COLOR = 0x00ffaa;
+// --- Colores y Materiales ---
 
-// --- Malla infinita (se mueve con la camara) ---
+const GRID_COLOR = 0x818cf8; // Tailwind Indigo-400
+const BUILDING_COLOR = 0x4f46e5; // Tailwind Indigo-600
+const BUILDING_GLOW = 0x818cf8;
 
-function createGrid(size, divisions, color, opacity) {
-  const geo = new THREE.BufferGeometry();
-  const half = size / 2;
-  const step = size / divisions;
-  const vertices = [];
+// Ambient Light
+scene.add(new THREE.AmbientLight(0x222233));
 
-  for (let i = 0; i <= divisions; i++) {
-    const pos = -half + i * step;
-    // lineas en X
-    vertices.push(-half, 0, pos, half, 0, pos);
-    // lineas en Z
-    vertices.push(pos, 0, -half, pos, 0, half);
-  }
+// Suelo - Grid Holográfico
+const gridHelper = new THREE.GridHelper(5000, 250, 0x4f46e5, 0x1e1b4b);
+gridHelper.position.y = -0.1;
+scene.add(gridHelper);
 
-  geo.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
-
-  const mat = new THREE.LineBasicMaterial({
-    color,
-    transparent: true,
-    opacity,
-  });
-
-  return new THREE.LineSegments(geo, mat);
-}
-
-// Grid principal (cercano, mas brillante)
-const gridMain = createGrid(200, 200, GRID_COLOR, 0.15);
-scene.add(gridMain);
-
-// Grid secundario (mayor escala, mas tenue)
-const gridLarge = createGrid(200, 20, GRID_COLOR, 0.3);
-scene.add(gridLarge);
-
-// --- Ejes de referencia en el origen ---
-
-function createAxisLine(start, end, color) {
-  const geo = new THREE.BufferGeometry().setFromPoints([
-    new THREE.Vector3(...start),
-    new THREE.Vector3(...end),
-  ]);
-  const mat = new THREE.LineBasicMaterial({
-    color,
-    transparent: true,
-    opacity: 0.5,
-  });
-  return new THREE.Line(geo, mat);
-}
-
-scene.add(createAxisLine([-100, 0, 0], [100, 0, 0], 0xff4444)); // X rojo
-scene.add(createAxisLine([0, -100, 0], [0, 100, 0], 0x44ff44)); // Y verde
-scene.add(createAxisLine([0, 0, -100], [0, 0, 100], 0x4488ff)); // Z azul
-
-// --- Particulas flotantes ---
-
-const PARTICLE_COUNT = 800;
-const particlesGeo = new THREE.BufferGeometry();
-const particlePositions = new Float32Array(PARTICLE_COUNT * 3);
-const particleSpeeds = new Float32Array(PARTICLE_COUNT);
-
-for (let i = 0; i < PARTICLE_COUNT; i++) {
-  particlePositions[i * 3] = (Math.random() - 0.5) * 200;
-  particlePositions[i * 3 + 1] = Math.random() * 30 + 0.5;
-  particlePositions[i * 3 + 2] = (Math.random() - 0.5) * 200;
-  particleSpeeds[i] = Math.random() * 0.5 + 0.1;
-}
-
-particlesGeo.setAttribute(
-  "position",
-  new THREE.Float32BufferAttribute(particlePositions, 3)
-);
-
-const particlesMat = new THREE.PointsMaterial({
-  color: GRID_COLOR,
-  size: 0.15,
+// Material para los edificios
+const buildingMaterial = new THREE.MeshBasicMaterial({
+  color: 0x0f172a,
   transparent: true,
-  opacity: 0.6,
-  sizeAttenuation: true,
+  opacity: 0.9,
 });
 
-const particles = new THREE.Points(particlesGeo, particlesMat);
-scene.add(particles);
-
-// --- Objetos geometricos dispersos ---
-
-const objectMaterial = new THREE.MeshBasicMaterial({
-  color: GRID_COLOR,
-  wireframe: true,
+const buildingLineMaterial = new THREE.LineBasicMaterial({
+  color: BUILDING_GLOW,
   transparent: true,
   opacity: 0.3,
 });
 
-const objects = [];
-const geometries = [
-  new THREE.IcosahedronGeometry(1.5, 0),
-  new THREE.OctahedronGeometry(1.2, 0),
-  new THREE.TetrahedronGeometry(1.5, 0),
-  new THREE.TorusGeometry(1, 0.3, 8, 12),
-  new THREE.BoxGeometry(1.5, 1.5, 1.5),
-];
+// --- Carga de Datos (GeoJSON Simplificado) ---
 
-for (let i = 0; i < 30; i++) {
-  const geo = geometries[Math.floor(Math.random() * geometries.length)];
-  const mesh = new THREE.Mesh(geo, objectMaterial.clone());
-  mesh.position.set(
-    (Math.random() - 0.5) * 160,
-    Math.random() * 15 + 1,
-    (Math.random() - 0.5) * 160
-  );
-  mesh.rotation.set(
-    Math.random() * Math.PI,
-    Math.random() * Math.PI,
-    Math.random() * Math.PI
-  );
-  mesh.userData.rotSpeed = {
-    x: (Math.random() - 0.5) * 0.01,
-    y: (Math.random() - 0.5) * 0.01,
-    z: (Math.random() - 0.5) * 0.005,
-  };
-  scene.add(mesh);
-  objects.push(mesh);
+// Centro de referencia (Valencia centro aprox)
+const refLon = -0.3763;
+const refLat = 39.4699;
+// Factor de escala (aprox metros por grado en estas latitudes)
+const scaleX = 86000;
+const scaleZ = 111000;
+
+const buildingsGroup = new THREE.Group();
+scene.add(buildingsGroup);
+
+fetch('data/valencia_buildings.json')
+  .then(res => res.json())
+  .then(data => {
+    console.log(`Cargando ${data.length} edificios...`);
+
+    document.getElementById("coords").textContent = `CARGANDO DATOS 3D...`;
+
+    const geometries = [];
+    const edgeGeometries = [];
+
+    data.forEach(coords => {
+      if (coords.length < 3) return;
+
+      const shape = new THREE.Shape();
+      coords.forEach((point, i) => {
+        const x = (point[0] - refLon) * scaleX;
+        const z = -(point[1] - refLat) * scaleZ;
+
+        if (i === 0) shape.moveTo(x, z);
+        else shape.lineTo(x, z);
+      });
+
+      const height = 10 + Math.random() * 40; // Altura aleatoria para skyline
+      const extrudeSettings = {
+        depth: height,
+        bevelEnabled: false,
+      };
+
+      const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+      geometry.rotateX(-Math.PI / 2);
+
+      geometries.push(geometry);
+
+      // Líneas de contorno
+      const edges = new THREE.EdgesGeometry(geometry);
+      edgeGeometries.push(edges);
+    });
+
+    if (geometries.length > 0) {
+      // Unir mallas sólidas
+      const mergedGeometry = BufferGeometryUtils.mergeGeometries(geometries);
+      const mergedMesh = new THREE.Mesh(mergedGeometry, buildingMaterial);
+      buildingsGroup.add(mergedMesh);
+
+      // Unir líneas de contorno (EdgesGeometry -> LineSegments)
+      const mergedEdgesGeometry = BufferGeometryUtils.mergeGeometries(edgeGeometries);
+      const mergedEdges = new THREE.LineSegments(mergedEdgesGeometry, buildingLineMaterial);
+      buildingsGroup.add(mergedEdges);
+    }
+
+    console.log("Mapa 3D cargado completo y optimizado.");
+    document.getElementById("coords").textContent = `DATOS DESPLEGADOS (Lat: ${refLat}, Lon: ${refLon})`;
+
+    // Apuntar camara a la ciudad
+    controls.target.set(0, 0, 0);
+
+  })
+  .catch(err => console.error("Error cargando el mapa:", err));
+
+// --- Keyboard WASD Movement (Combined with OrbitControls) ---
+
+const keys = { w: false, a: false, s: false, d: false };
+
+document.addEventListener('keydown', (e) => {
+  const key = e.key.toLowerCase();
+  if (keys.hasOwnProperty(key)) keys[key] = true;
+});
+
+document.addEventListener('keyup', (e) => {
+  const key = e.key.toLowerCase();
+  if (keys.hasOwnProperty(key)) keys[key] = false;
+});
+
+const moveSpeed = 600; // Units per second
+const velocity = new THREE.Vector3();
+
+function updateCameraMovement(delta) {
+  // Obtener la dirección frontal y lateral de la cámara plana (sin inclinación Y)
+  const forward = new THREE.Vector3();
+  camera.getWorldDirection(forward);
+  forward.y = 0;
+  forward.normalize();
+
+  const right = new THREE.Vector3();
+  right.crossVectors(forward, camera.up).normalize();
+
+  velocity.set(0, 0, 0);
+
+  if (keys.w) velocity.add(forward);
+  if (keys.s) velocity.sub(forward);
+  if (keys.a) velocity.sub(right);
+  if (keys.d) velocity.add(right);
+
+  if (velocity.lengthSq() > 0) {
+    velocity.normalize().multiplyScalar(moveSpeed * delta);
+
+    // Mover tanto la cámara como el objetivo del OrbitControls para mantener la relación
+    camera.position.add(velocity);
+    controls.target.add(velocity);
+  }
 }
 
-// --- Controles de camara ---
-
-const keys = {};
-let yaw = 0;
-let pitch = -0.3;
-let isPointerLocked = false;
-
-document.addEventListener("keydown", (e) => {
-  keys[e.code] = true;
-});
-document.addEventListener("keyup", (e) => {
-  keys[e.code] = false;
-});
-
-// Pointer lock
-renderer.domElement.addEventListener("click", () => {
-  renderer.domElement.requestPointerLock();
-});
-
-document.addEventListener("pointerlockchange", () => {
-  isPointerLocked = document.pointerLockElement === renderer.domElement;
-});
-
-document.addEventListener("mousemove", (e) => {
-  if (!isPointerLocked) return;
-  yaw -= e.movementX * 0.002;
-  pitch -= e.movementY * 0.002;
-  pitch = Math.max(-Math.PI / 2 + 0.1, Math.min(Math.PI / 2 - 0.1, pitch));
-});
-
-// --- Coordenadas HUD ---
+// --- Controles de HUD ---
 
 const coordsEl = document.getElementById("coords");
+
+const overlay = document.getElementById('space-overlay');
+overlay.querySelector('h1').textContent = "VALENCIA 3D";
+overlay.querySelector('p').textContent = "Exploración urbana generativa / WASD para moverte";
+overlay.querySelector('button').textContent = "EXPLORAR DATOS";
 
 // --- Resize ---
 
@@ -193,8 +189,6 @@ window.addEventListener("resize", () => {
 
 // --- Loop ---
 
-const moveSpeed = 0.15;
-const direction = new THREE.Vector3();
 const clock = new THREE.Clock();
 
 function animate() {
@@ -202,61 +196,28 @@ function animate() {
 
   const delta = clock.getDelta();
 
-  // Camara: rotacion
-  camera.rotation.set(pitch, yaw, 0);
+  updateCameraMovement(delta);
+  controls.update();
 
-  // Movimiento relativo a la direccion de la camara
-  direction.set(0, 0, 0);
-
-  if (keys["KeyW"] || keys["ArrowUp"]) direction.z -= 1;
-  if (keys["KeyS"] || keys["ArrowDown"]) direction.z += 1;
-  if (keys["KeyA"] || keys["ArrowLeft"]) direction.x -= 1;
-  if (keys["KeyD"] || keys["ArrowRight"]) direction.x += 1;
-  if (keys["Space"]) direction.y += 1;
-  if (keys["ShiftLeft"] || keys["ShiftRight"]) direction.y -= 1;
-
-  if (direction.length() > 0) {
-    direction.normalize().multiplyScalar(moveSpeed);
-
-    // Rotar direccion segun yaw y pitch (sigue la direccion del raton)
-    const forward = new THREE.Vector3(0, 0, direction.z);
-    const right = new THREE.Vector3(direction.x, 0, 0);
-    forward.applyEuler(camera.rotation);
-    right.applyEuler(new THREE.Euler(0, yaw, 0, "YXZ"));
-
-    camera.position.addScaledVector(forward, 1);
-    camera.position.addScaledVector(right, 1);
-    camera.position.y += direction.y * moveSpeed;
+  // Rotación lenta de la ciudad para un efecto cinemático si no hay interacción de mouse y no se pulsan teclas
+  if (!controls.state && !keys.w && !keys.a && !keys.s && !keys.d && buildingsGroup.children.length > 0) {
+    // Rotar alrededor del centro
+    const angle = delta * 0.05;
+    const x = camera.position.x;
+    const z = camera.position.z;
+    camera.position.x = x * Math.cos(angle) - z * Math.sin(angle);
+    camera.position.z = z * Math.cos(angle) + x * Math.sin(angle);
+    camera.lookAt(controls.target);
   }
 
-  // Malla sigue la camara (efecto infinito)
-  gridMain.position.x =
-    Math.floor(camera.position.x / 1) * 1;
-  gridMain.position.z =
-    Math.floor(camera.position.z / 1) * 1;
-  gridLarge.position.x =
-    Math.floor(camera.position.x / 10) * 10;
-  gridLarge.position.z =
-    Math.floor(camera.position.z / 10) * 10;
-
-  // Animar particulas
-  const positions = particles.geometry.attributes.position.array;
-  for (let i = 0; i < PARTICLE_COUNT; i++) {
-    positions[i * 3 + 1] += Math.sin(clock.elapsedTime * particleSpeeds[i] + i) * 0.003;
+  // Actualizar coordenadas HUD aprox
+  if (frames % 10 === 0) {
+    coordsEl.textContent = `Lat: ${(controls.target.z / -scaleZ + refLat).toFixed(4)} Lon: ${(controls.target.x / scaleX + refLon).toFixed(4)} Alt: ${Math.round(camera.position.y)}m`;
   }
-  particles.geometry.attributes.position.needsUpdate = true;
-
-  // Rotar objetos
-  for (const obj of objects) {
-    obj.rotation.x += obj.userData.rotSpeed.x;
-    obj.rotation.y += obj.userData.rotSpeed.y;
-    obj.rotation.z += obj.userData.rotSpeed.z;
-  }
-
-  // HUD coordenadas
-  coordsEl.textContent = `x: ${camera.position.x.toFixed(1)}  y: ${camera.position.y.toFixed(1)}  z: ${camera.position.z.toFixed(1)}`;
+  frames++;
 
   renderer.render(scene, camera);
 }
 
+let frames = 0;
 animate();

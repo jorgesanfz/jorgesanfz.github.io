@@ -1,6 +1,6 @@
 [
   { "label": "Inicio", "href": "index.html" },
-  { "label": "Articulos", "href": "articles.html" },
+  { "label": "Artículos", "href": "articles.html" },
   { "label": "Lab", "href": "lab.html" },
   { "label": "Espacio", "href": "space.html" }
 ]
