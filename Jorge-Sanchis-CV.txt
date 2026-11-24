@@ -1,0 +1,44 @@
+JORGE SANCHIS
+Product development & systems integration
+Valencia, Spain | Open to relocation
+jorgesanfz@gmail.com | https://www.linkedin.com/in/jorge-s-363365174/
+
+PROFILE
+I develop products and integrate software with physical systems across automotive and European mobility projects. My work spans technical coordination, customer collaboration and on-site delivery.
+
+EXPERIENCE
+Lumibit | Software Developer · Automotive products
+APR 2025 - PRESENT
+- Develop Flutter vehicle-testing applications for BMW, connecting in-car systems and cloud services.
+- Develop backend services in Go for BMW’s vehicle data-recording system.
+- Take applications from design through release as primary developer, contributing technical product decisions and working directly with stakeholders.
+- Own build, test and release pipelines and conduct on-site testing with the client.
+
+ETRA | Software Developer · European mobility
+MAR 2023 - MAR 2025
+- Designed solutions and coordinated development for European mobility projects with cities and public institutions, covering traffic, connected vehicles and public transport.
+- Built a Flutter application and Go backend for bus operations systems, with support for high concurrency.
+- Developed 3D and virtual-reality applications with Three.js.
+- Developed software integrated with physical systems, working across backend services and user-facing applications.
+- Developed drone communications for a safety system for the police, supporting data and video transmission.
+
+Wenalyze | Backend Developer
+JUN 2022 - FEB 2023
+- Built Node.js backend services on AWS for an insurance-sector data analytics platform.
+
+Sothis | Web Developer · Dual vocational training
+OCT 2021 - MAY 2022
+- Developed web interfaces with React through a dual vocational training placement.
+
+TECHNICAL SKILLS
+Physical systems: Vehicle-testing systems, drone communications, electronics integration.
+Mobile, web & 3D: Flutter, Dart, React, JavaScript, Three.js, VR.
+Backend: Go, Python, Node.js, SQL, Java.
+Cloud & delivery: Docker, Kubernetes, AWS, Google Cloud, Firebase, CI/CD.
+
+LANGUAGES
+Spanish: Native. English: Full professional proficiency. French: Good working proficiency.
+
+EDUCATION
+IES Abastos | Higher Vocational Diploma in Multiplatform Application Development
+2020 - 2022 | Valencia
